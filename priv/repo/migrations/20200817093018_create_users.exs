@@ -11,6 +11,7 @@ defmodule PoolWatch.Repo.Migrations.CreateUsers do
       add :is_active, :boolean, default: true, null: false
       add :profile, :map
       add :role, :string, null: false, default: "NORMAL"
+      add :is_verified, :boolean, default: false, null: false
 
       timestamps()
     end

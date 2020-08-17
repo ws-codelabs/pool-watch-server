@@ -7,6 +7,7 @@ defmodule PoolWatch.Pool do
   alias PoolWatch.Repo
 
   alias PoolWatch.Pool.Info
+  alias PoolWatch.Account.User
 
   @doc """
   Returns the list of pool_infos.
@@ -37,19 +38,40 @@ defmodule PoolWatch.Pool do
   """
   def get_info!(id), do: Repo.get!(Info, id)
 
+
+  @doc """
+    Search pool with several params
+
+    ## Examples
+
+      iex> search_pool(valid_query)
+      %Info{}
+
+      iex> search_pool(invalid_query)
+      nil
+  """
+  def search_pool(query) do
+    query =
+      from p in Info,
+      where: p.hash == ^query or p.metadata_hash == ^query,
+      select: p
+
+    Repo.one(query)
+  end
+
   @doc """
   Creates a info.
 
   ## Examples
 
-      iex> create_info(%{field: value})
+      iex> create_pool(%{field: value})
       {:ok, %Info{}}
 
-      iex> create_info(%{field: bad_value})
+      iex> create_pool(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_info(attrs \\ %{}) do
+  def create_pool(attrs \\ %{}) do
     %Info{}
     |> Info.changeset(attrs)
     |> Repo.insert()
@@ -101,4 +123,40 @@ defmodule PoolWatch.Pool do
   def change_info(%Info{} = info, attrs \\ %{}) do
     Info.changeset(info, attrs)
   end
+
+  alias PoolWatch.Pool.UserPools
+
+  @doc """
+    Assigns Pool to user
+
+    ## Examples
+
+        iex> create_user_pools(%User{}, %Info{})
+        {:ok, %UserPools{}}
+
+        iex> create_user_pools(%User{is_verified: false}, pool_info)
+        {:error, :USER_NOT_VERIFIED}
+
+        iex> create_user_pools(invalid_user, pool_info)
+        {:error, :INVALID_USER}
+
+        iex> create_user_pools(user, invalid_pool_info)
+        {:error, :INVALID_POOL}
+
+  """
+  def create_user_pools(%User{is_verified: false}, _pool_info), do: {:error, :USER_NOT_VERIFIED}
+  def create_user_pools(%User{id: user_id}, %Info{id: pool_id}) do
+    attrs = %{
+      pub_key: "pb_" <> PoolWatch.Utils.genrate_hash(),
+      priv_key: "secret_" <> PoolWatch.Utils.genrate_hash()
+    }
+    %UserPools{user_id: user_id, pool_id: pool_id}
+    |> UserPools.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_user_pools(_, %Info{}), do: {:error, :INVALID_USER}
+  def create_user_pools(_, _), do: {:error, :INVALID_POOL}
+
+
 end

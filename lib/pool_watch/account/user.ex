@@ -10,6 +10,7 @@ defmodule PoolWatch.Account.User do
     field :mob_no, :string
     field :profile, :map
     field :role, :string
+    field :is_verified, :boolean, default: false
 
     timestamps()
   end
@@ -17,7 +18,8 @@ defmodule PoolWatch.Account.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :mob_no, :is_active, :profile, :role])
-    |> validate_required([:email, :mob_no, :is_active, :profile, :role])
+    |> cast(attrs, [:email, :mob_no, :is_active, :profile, :role, :is_verified])
+    |> validate_required([:email])
+    |> unique_constraint(:email)
   end
 end

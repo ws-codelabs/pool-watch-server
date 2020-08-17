@@ -3,10 +3,10 @@ defmodule PoolWatch.Repo.Migrations.CreatePoolInfos do
 
   def change do
     create table(:pool_infos, primary_key: false) do
-      add :id, :binary_id, primary_key: true
+      add :id, :binary_id, default: fragment("uuid_generate_v4()"), primary_key: true
       add :url, :string
-      add :metadata_hash, :string
-      add :hash, :string
+      add :metadata_hash, :string, null: false
+      add :hash, :string, nulll: false
       add :pledge, :integer
       add :margin, :float
       add :fixed_cost, :integer

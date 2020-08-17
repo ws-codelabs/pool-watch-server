@@ -14,7 +14,7 @@ defmodule PoolWatch.PoolTest do
       {:ok, info} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Pool.create_info()
+        |> Pool.create_pool()
 
       info
     end
@@ -29,8 +29,8 @@ defmodule PoolWatch.PoolTest do
       assert Pool.get_info!(info.id) == info
     end
 
-    test "create_info/1 with valid data creates a info" do
-      assert {:ok, %Info{} = info} = Pool.create_info(@valid_attrs)
+    test "create_pool/1 with valid data creates a info" do
+      assert {:ok, %Info{} = info} = Pool.create_pool(@valid_attrs)
       assert info.description == "some description"
       assert info.fixed_cost == 42
       assert info.hash == "some hash"
@@ -43,8 +43,8 @@ defmodule PoolWatch.PoolTest do
       assert info.url == "some url"
     end
 
-    test "create_info/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Pool.create_info(@invalid_attrs)
+    test "create_pool/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Pool.create_pool(@invalid_attrs)
     end
 
     test "update_info/2 with valid data updates the info" do
@@ -77,6 +77,20 @@ defmodule PoolWatch.PoolTest do
     test "change_info/1 returns a info changeset" do
       info = info_fixture()
       assert %Ecto.Changeset{} = Pool.change_info(info)
+    end
+  end
+
+  describe "user_pool test" do
+    alias PoolWatch.Pool.UserPools
+    test "create_user_pools creates pool for user" do
+      assert {:ok, %UserPools{} = u_pool} = Pool.create_user_pools(get_user(), get_pool())
+      assert is_binary(u_pool.priv_key)
+      assert is_binary(u_pool.pub_key)
+
+      assert {:error, :INVALID_USER} == Pool.create_user_pools(nil, get_pool())
+      assert {:error, :INVALID_POOL} == Pool.create_user_pools(get_user(), nil)
+      assert {:error, :USER_NOT_VERIFIED} == Pool.create_user_pools(get_user(%{email: "e@2.com"}), nil)
+
     end
   end
 end

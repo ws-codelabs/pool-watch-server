@@ -24,6 +24,7 @@ defmodule PoolWatch.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import PoolWatch.DataCase
+      import PoolWatch.FactoryCase
     end
   end
 

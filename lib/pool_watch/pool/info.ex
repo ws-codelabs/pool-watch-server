@@ -23,6 +23,6 @@ defmodule PoolWatch.Pool.Info do
   def changeset(info, attrs) do
     info
     |> cast(attrs, [:url, :metadata_hash, :hash, :pledge, :margin, :fixed_cost, :reward_address, :ticker, :home_url, :description])
-    |> validate_required([:url, :metadata_hash, :hash, :pledge, :margin, :fixed_cost, :reward_address, :ticker, :home_url, :description])
+    |> validate_required([:metadata_hash, :hash])
   end
 end
