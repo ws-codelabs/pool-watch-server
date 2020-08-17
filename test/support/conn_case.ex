@@ -23,6 +23,7 @@ defmodule PoolWatchWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import PoolWatchWeb.ConnCase
+      import PoolWatch.FactoryCase
 
       alias PoolWatchWeb.Router.Helpers, as: Routes
 
