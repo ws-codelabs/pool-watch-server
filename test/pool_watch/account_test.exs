@@ -85,4 +85,22 @@ defmodule PoolWatch.AccountTest do
       assert {:error, %Ecto.Changeset{}} = Account.create_user_device(get_user(), %{})
     end
   end
+
+  describe "user token test" do
+    alias Account.UserToken
+
+    @valid_attrs %{
+      type: "TYPE-01"
+    }
+
+    test "create_user_token creates token for user" do
+      assert {:ok, %UserToken{token: token, code: code}} = Account.create_user_token(get_user())
+      assert is_binary(token)
+      assert is_binary(code)
+
+      assert {:error, :INVALID_USER} == Account.create_user_token(nil, %{})
+      assert {:ok, %UserToken{type: type}} = Account.create_user_token(get_user(), @valid_attrs)
+      assert type == @valid_attrs.type
+    end
+  end
 end

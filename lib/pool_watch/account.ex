@@ -129,4 +129,17 @@ defmodule PoolWatch.Account do
 
   def create_user_device(_invalid_user, _attrs), do: {:error, :INVALID_USER}
 
+  alias PoolWatch.Account.UserToken
+
+  def create_user_token(user) do
+    create_user_token(user, %{})
+  end
+  def create_user_token(%User{id: user_id}, attrs) do
+    %UserToken{user_id: user_id}
+    |> UserToken.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_user_token(_invalid_user, _attrs ), do: {:error, :INVALID_USER}
+
 end
