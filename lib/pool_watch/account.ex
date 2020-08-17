@@ -103,4 +103,30 @@ defmodule PoolWatch.Account do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  alias PoolWatch.Account.UserDevices
+
+  @doc """
+    creates Mobile Device_id for user
+
+    ## Examples
+
+        iex> create_user_device(%User{}, valid_attrs)
+        {:ok, %UserDevice{}}
+
+        iex> create_user_device(%user{}, invalid_attrs)
+        {:error, %Ecto.Changeset{}}
+
+        iex> create_user_device(_, _)
+        {:error, :INVALID_USER}
+
+  """
+  def create_user_device(%User{id: id}, attrs) do
+    %UserDevices{user_id: id}
+    |> UserDevices.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_user_device(_invalid_user, _attrs), do: {:error, :INVALID_USER}
+
 end

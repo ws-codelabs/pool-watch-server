@@ -69,4 +69,20 @@ defmodule PoolWatch.AccountTest do
       assert %Ecto.Changeset{} = Account.change_user(user)
     end
   end
+
+  describe "user devices" do
+    alias Account.UserDevices
+
+    @valid_attrs %{
+      device_id: "valid_device_id",
+      device_type: "ANDROID"
+    }
+
+    test "create_user_device/2" do
+      assert {:ok, %UserDevices{}} = Account.create_user_device(get_user(), @valid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Account.create_user_device(get_user(), @valid_attrs)
+      assert {:error, :INVALID_USER} == Account.create_user_device(nil, %{})
+      assert {:error, %Ecto.Changeset{}} = Account.create_user_device(get_user(), %{})
+    end
+  end
 end
