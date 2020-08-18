@@ -80,6 +80,7 @@ defmodule PoolWatch.Query.StakePoolQuery do
         batch
         |> Task.await()
         |> format_pool_data()
+        |> Enum.filter(&(is_binary(&1[:metadata_hash]) and is_binary(&1[:hash])))
 
       pools ++ new_pool_data
     end)
@@ -96,19 +97,26 @@ defmodule PoolWatch.Query.StakePoolQuery do
       NaiveDateTime.utc_now()
       |> NaiveDateTime.truncate(:second)
 
-    %{
-        description: nil,
-        fixed_cost: Utils.to_int(data["fixedCost"]),
-        hash: data["hash"],
-        home_url: nil,
-        margin: Utils.to_float(data["margin"]),
-        metadata_hash: data["metadataHash"],
-        pledge: Utils.to_int(data["pledge"]),
-        reward_address: data["rewardAddress"],
-        ticker: nil,
-        url: nil,
-        inserted_at: timestamp,
-        updated_at: timestamp
-    }
+    case Map.get(data, :inserted_at) do
+      nil ->
+        %{
+          description: nil,
+          fixed_cost: Utils.to_int(data["fixedCost"]),
+          hash: data["hash"],
+          home_url: nil,
+          margin: Utils.to_float(data["margin"]),
+          metadata_hash: data["metadataHash"],
+          pledge: Utils.to_int(data["pledge"]),
+          reward_address: data["rewardAddress"],
+          ticker: nil,
+          url: nil,
+          inserted_at: timestamp,
+          updated_at: timestamp
+        }
+
+      _ ->
+        data
+
+    end
   end
 end

@@ -7,9 +7,9 @@ defmodule PoolWatch.Repo.Migrations.CreatePoolInfos do
       add :url, :string
       add :metadata_hash, :string, null: false
       add :hash, :string, nulll: false
-      add :pledge, :integer
+      add :pledge, :bigint
       add :margin, :float
-      add :fixed_cost, :integer
+      add :fixed_cost, :bigint
       add :reward_address, :string
       add :ticker, :string
       add :home_url, :string

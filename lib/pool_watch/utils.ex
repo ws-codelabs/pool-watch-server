@@ -31,6 +31,8 @@ defmodule PoolWatch.Utils do
     end
   end
 
+  def to_int(_), do: nil
+
   def to_float(value) when is_float(value) do
     value
   end
@@ -48,5 +50,7 @@ defmodule PoolWatch.Utils do
         nil
     end
   end
+
+  def to_float(_), do: nil
 
 end

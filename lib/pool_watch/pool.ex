@@ -77,7 +77,19 @@ defmodule PoolWatch.Pool do
     |> Repo.insert()
   end
 
+  @doc """
+    Fetches all pools from blockchain and stores them
+  """
+  def sync_pools() do
+    PoolWatch.Query.StakePoolQuery.list_all_stake_pool()
+    |> insert_all_pool()
+  end
+
+  @doc """
+    Inserts multiple pool at one go
+  """
   def insert_all_pool(pool_data) do
+    IO.inspect pool_data
 
     Repo.insert_all(Info, pool_data, [
       on_conflict: :replace_all,

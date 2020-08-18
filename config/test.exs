@@ -18,5 +18,7 @@ config :pool_watch, PoolWatchWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :pool_watch, :env, :test
+
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -36,6 +36,13 @@ defmodule PoolWatch.PoolTest do
 
     end
 
+    test "search_pool/1 gives pool detail" do
+      info = info_fixture()
+      assert nil == Pool.search_pool("BAD---HASH")
+      assert info == Pool.search_pool(info.hash)
+      assert info == Pool.search_pool(info.metadata_hash)
+    end
+
     test "get_info!/1 returns the info with given id" do
       info = info_fixture()
       assert Pool.get_info!(info.id) == info
