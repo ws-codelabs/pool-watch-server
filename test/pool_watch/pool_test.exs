@@ -5,6 +5,7 @@ defmodule PoolWatch.PoolTest do
 
   describe "pool_infos" do
     alias PoolWatch.Pool.Info
+    alias PoolWatch.Query.StakePoolQuery
 
     @valid_attrs %{description: "some description", fixed_cost: 42, hash: "some hash", home_url: "some home_url", margin: 120.5, metadata_hash: "some metadata_hash", pledge: 42, reward_address: "some reward_address", ticker: "some ticker", url: "some url"}
     @update_attrs %{description: "some updated description", fixed_cost: 43, hash: "some updated hash", home_url: "some updated home_url", margin: 456.7, metadata_hash: "some updated metadata_hash", pledge: 43, reward_address: "some updated reward_address", ticker: "some updated ticker", url: "some updated url"}
@@ -22,6 +23,17 @@ defmodule PoolWatch.PoolTest do
     test "list_pool_infos/0 returns all pool_infos" do
       info = info_fixture()
       assert Pool.list_pool_infos() == [info]
+    end
+
+    test "insert_all_pool/1 creates multiple Pool" do
+      total_count = StakePoolQuery.get_total_stake_pools()
+
+      StakePoolQuery.list_stake_Pool(total_count - 1)
+      |> Pool.insert_all_pool()
+
+      assert [pool_data] = Pool.list_pool_infos()
+      assert is_map(pool_data)
+
     end
 
     test "get_info!/1 returns the info with given id" do

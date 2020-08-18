@@ -18,5 +18,6 @@ defmodule PoolWatch.Repo.Migrations.CreatePoolInfos do
       timestamps()
     end
 
+    create unique_index(:pool_infos, :hash)
   end
 end

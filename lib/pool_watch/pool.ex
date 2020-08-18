@@ -77,6 +77,14 @@ defmodule PoolWatch.Pool do
     |> Repo.insert()
   end
 
+  def insert_all_pool(pool_data) do
+
+    Repo.insert_all(Info, pool_data, [
+      on_conflict: :replace_all,
+      conflict_target: "hash"
+    ])
+  end
+
   @doc """
   Updates a info.
 
