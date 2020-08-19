@@ -22,3 +22,6 @@ config :pool_watch, :env, :test
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :pool_watch, PoolWatch.Mailer,
+  adapter: Bamboo.TestAdapter

@@ -1,0 +1,2 @@
+<h5> this is code </h5>
+<%= @data.code %>

@@ -1,5 +1,6 @@
 defmodule PoolWatch.AccountTest do
   use PoolWatch.DataCase
+  use Bamboo.Test
 
   alias PoolWatch.Account
 
@@ -101,6 +102,19 @@ defmodule PoolWatch.AccountTest do
       assert {:error, :INVALID_USER} == Account.create_user_token(nil, %{})
       assert {:ok, %UserToken{type: type}} = Account.create_user_token(get_user(), @valid_attrs)
       assert type == @valid_attrs.type
+    end
+  end
+
+  describe "user email test" do
+    @user_auth [
+      data: %{code: "89797"},
+      subject: "Subject---"
+    ]
+
+    test "user_auth email" do
+      assert email = Account.send_token_email("a@a", @user_auth ++ [content: "auth_code.html"])
+      assert_delivered_email email
+
     end
   end
 end

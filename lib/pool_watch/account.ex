@@ -142,4 +142,18 @@ defmodule PoolWatch.Account do
 
   def create_user_token(_invalid_user, _attrs ), do: {:error, :INVALID_USER}
 
+  def send_token_email(%User{email: email}, opts) do
+    content = Keyword.get(opts, :content)
+    subject = Keyword.get(opts, :subject)
+    data = Keyword.get(opts, :data)
+
+    PoolWatch.Email.html_email(email, subject, content: content, data: data)
+    |> PoolWatch.Mailer.deliver_later()
+  end
+
+  def send_token_email(email, opts) do
+    %User{email: email}
+    |> send_token_email(opts)
+  end
+
 end

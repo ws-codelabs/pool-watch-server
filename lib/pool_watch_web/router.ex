@@ -18,14 +18,14 @@ defmodule PoolWatchWeb.Router do
     pipe_through :browser
 
     live "/", PageLive, :index
-    live "/new/pool", AddPoolLive, :index
-    live "pool/channels", ChannelLive
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", PoolWatchWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", PoolWatchWeb.V1, as: :api_v1 do
+    pipe_through :api
+
+    resources "/pools", PoolController, only: [:show]
+  end
 
   # Enables LiveDashboard only for development
   #
