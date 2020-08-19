@@ -1,4 +1,4 @@
-defmodule PoolWatch.TokenRegistry do
+defmodule PoolWatch.Account.TokenRegistry do
   use GenServer
 
   alias PoolWatch.Utils

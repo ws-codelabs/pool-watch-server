@@ -8,6 +8,7 @@ defmodule PoolWatch.Application do
   def start(_type, _args) do
 
     children = [
+      PoolWatch.Account.TokenRegistry,
       # Start the Ecto repository
       PoolWatch.Repo,
       # Start the Telemetry supervisor

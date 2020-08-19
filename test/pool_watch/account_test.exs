@@ -69,6 +69,14 @@ defmodule PoolWatch.AccountTest do
       user = user_fixture()
       assert %Ecto.Changeset{} = Account.change_user(user)
     end
+
+    test "login function create or register user" do
+      assert {:ok, code} = PoolWatch.Account.TokenRegistry.handle_new_user("e@e.com")
+      assert {:ok, %{user_info: user, token: token}} = Account.login(code)
+      assert user.email == "e@e.com"
+      assert user.is_verified == true
+      assert is_binary(token)
+    end
   end
 
   describe "user devices" do

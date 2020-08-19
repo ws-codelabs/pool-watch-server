@@ -29,6 +29,10 @@ config :phoenix, :json_library, Jason
 
 config :pool_watch, :cardano_endpoint, System.get_env("CARDANO_GQL_URL")
 
+config :pool_watch, PoolWatch.Account.Guardian,
+  issuer: "pool_watch",
+  secret_key: "OBXQlm9+LZCuDd0fGSCU+jeJ/ZrSzgbtROHOueZJW04qk6yMpQ61/mzF2r4Lkpfn"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

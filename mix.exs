@@ -48,7 +48,8 @@ defmodule PoolWatch.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:neuron, "~> 5.0"},
-      {:bamboo, "~> 1.5"}
+      {:bamboo, "~> 1.5"},
+      {:guardian, "~> 2.1"}
     ]
   end
 

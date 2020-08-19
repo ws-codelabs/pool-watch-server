@@ -7,6 +7,7 @@ defmodule PoolWatch.Account do
   alias PoolWatch.Repo
 
   alias PoolWatch.Account.User
+  alias PoolWatch.Account.TokenRegistry
 
   @doc """
   Returns the list of users.
@@ -38,7 +39,7 @@ defmodule PoolWatch.Account do
   def get_user!(id), do: Repo.get!(User, id)
 
   def get_user({:email, email}), do: Repo.get_by(User, email: email)
-
+  def get_user(id) when is_binary(id), do: Repo.get(User, id)
   @doc """
   Creates a user.
 
@@ -103,6 +104,57 @@ defmodule PoolWatch.Account do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  @doc """
+    validates code and Logins user
+
+    ## Examples
+
+      iex> login(valid_code)
+      {:ok, %{user_info: %User{}, token: token}}
+
+      iex> login(invalid_code)
+      {:error,  :INVALID_CODE || :CODE_EXPIRED}
+  """
+  def login(code) when is_binary(code) do
+    case TokenRegistry.check_user(code) do
+      {:ok, %{email: email}} ->
+        create_or_fetch_user(%{email: email, is_verified: true})
+        |> generate_token()
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  defp generate_token({:ok, user}) do
+    {:ok, token, _} = PoolWatch.Account.Guardian.encode_and_sign(user)
+    {:ok, %{user_info: user, token: token}}
+  end
+
+  defp generate_token(result), do: result
+
+  @doc """
+    Creates or fetch User
+
+    iex> create_or_fetch_user(valid_attrs)
+    {:ok , %User{}}
+
+    iex> create_or_fetch_user(invalid_attrs)
+    {:error, %Ecto.Changeset{}}
+
+  """
+  def create_or_fetch_user(%{email: email} = user_params) do
+    case get_user({:email, email}) do
+      nil ->
+        create_user(user_params)
+
+      user ->
+        {:ok, user}
+    end
+  end
+
+
 
   alias PoolWatch.Account.UserDevices
 

@@ -2,7 +2,6 @@ defmodule PoolWatch.Account.TokenRegistryTest do
   use PoolWatch.DataCase
 
   test "user_auth test" do
-    PoolWatch.TokenRegistry.start_link([])
 
     assert {:ok, code} = PoolWatch.TokenRegistry.handle_new_user("e@e.com")
     assert {:ok, info} = PoolWatch.TokenRegistry.check_user(code)
