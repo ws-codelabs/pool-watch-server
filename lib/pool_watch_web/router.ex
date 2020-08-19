@@ -25,6 +25,8 @@ defmodule PoolWatchWeb.Router do
     pipe_through :api
 
     resources "/pools", PoolController, only: [:show]
+    resources "/user", UserController, except: [:new, :edit]
+    resources "/token", TokenController, only: [:create]
   end
 
   # Enables LiveDashboard only for development
