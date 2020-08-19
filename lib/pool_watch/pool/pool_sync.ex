@@ -11,7 +11,8 @@ defmodule PoolWatch.Pool.PoolSync do
   def init(_opts) do
     Neuron.Config.set(url: Application.get_env(:pool_watch, :cardano_endpoint))
     Logger.info("[cardano-gql] Fetching Pools ....")
-    IO.inspect Pool.sync_pools()
+    Pool.sync_pools()
+
     {:ok, []}
   end
 end

@@ -4,6 +4,11 @@ defmodule PoolWatchWeb.V1.UserController do
 
   action_fallback PoolWatchWeb.FallbackController
 
+  def index(conn, _) do
+    conn
+    |> render("show.json", %{user: conn.assigns.current_user})
+  end
+
   def create(conn, %{"code" => code}) do
     with {:ok, response} <- Account.login(code) do
       conn

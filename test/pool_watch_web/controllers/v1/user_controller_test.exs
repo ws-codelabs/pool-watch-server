@@ -19,5 +19,21 @@ defmodule PoolWatchWeb.V1.UserControllerTest do
         |> json_response(422)
 
     end
+
+    test "index action gives current LoggedIn user", %{conn: conn} do
+      assert %{"errors" => "INVALID_TOKEN"} =
+        conn
+        |> get(Routes.api_v1_user_path(conn, :index))
+        |> json_response(422)
+
+      assert %{"data" => response} =
+        conn
+        |> setup_auth("a@a.com")
+        |> get(Routes.api_v1_user_path(conn, :index))
+        |> json_response(200)
+
+      assert response["email"] == "a@a.com"
+
+    end
   end
 end

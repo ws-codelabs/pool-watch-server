@@ -14,6 +14,11 @@ defmodule PoolWatchWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :normal_auth do
+    plug PoolWatchWeb.Plugs.Auth
+  end
+
+
   scope "/", PoolWatchWeb do
     pipe_through :browser
 
@@ -25,9 +30,17 @@ defmodule PoolWatchWeb.Router do
     pipe_through :api
 
     resources "/pools", PoolController, only: [:show]
-    resources "/user", UserController, except: [:new, :edit]
+    resources "/user", UserController, only: [:create]
     resources "/token", TokenController, only: [:create]
   end
+
+  scope "/api/v1", PoolWatchWeb.V1, as: :api_v1 do
+    pipe_through [:api, :normal_auth]
+
+    resources "/user", UserController, except: [:create, :new, :edit]
+  end
+
+
 
   # Enables LiveDashboard only for development
   #

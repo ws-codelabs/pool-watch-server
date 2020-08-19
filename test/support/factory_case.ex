@@ -18,6 +18,14 @@ defmodule PoolWatch.FactoryCase do
     user
   end
 
+  def setup_auth(conn, email \\ "e@e.com") do
+    {:ok, code} = PoolWatch.Account.TokenRegistry.handle_new_user(email)
+    {:ok, %{token: token}} = Account.login(code)
+
+    conn
+    |> Plug.Conn.put_req_header("authorization", "Bearer #{token}")
+  end
+
   def get_pool(attrs \\  @pool_attrs) do
     {:ok, pool} =
       case Pool.search_pool(attrs.hash) do
