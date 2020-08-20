@@ -193,7 +193,7 @@ defmodule PoolWatch.Pool do
     query =
       from up in UserPools,
       where: up.user_id == ^user_id,
-      preload: [:pools],
+      preload: [:pool],
       select: up
 
     Repo.all(query)

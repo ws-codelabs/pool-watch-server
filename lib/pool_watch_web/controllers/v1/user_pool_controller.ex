@@ -6,6 +6,7 @@ defmodule PoolWatchWeb.V1.UserPoolController do
   action_fallback PoolWatchWeb.FallbackController
 
   def index(conn, _) do
+
     conn
     |> render("index.json", %{user_pools: Pool.list_user_pools(conn.assigns.current_user)})
   end
@@ -22,7 +23,7 @@ defmodule PoolWatchWeb.V1.UserPoolController do
     end
   end
 
-  def normal_create(conn, %{"pool_id" => pool_id, "code" => code}) do
+  def guest_create(conn, %{"pool_id" => pool_id, "code" => code}) do
     with {:ok, %{user_info: user} = session} <- PoolWatch.Account.login(code) do
       pool_detail = Pool.get_info(pool_id)
 

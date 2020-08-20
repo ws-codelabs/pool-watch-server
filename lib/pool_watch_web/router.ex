@@ -30,14 +30,18 @@ defmodule PoolWatchWeb.Router do
     pipe_through :api
 
     resources "/pools", PoolController, only: [:show]
-    resources "/user", UserController, only: [:create]
+    resources "/user", UserController, only: [:create, :update]
     resources "/token", TokenController, only: [:create]
+    post "/guest/pools/", UserPoolController, :guest_create
+
   end
 
   scope "/api/v1", PoolWatchWeb.V1, as: :api_v1 do
     pipe_through [:api, :normal_auth]
 
-    resources "/user", UserController, except: [:create, :new, :edit]
+    resources "/user", UserController, except: [:create, :new, :edit, :update]
+    resources "/user_pools", UserPoolController, except: [:new, :edit, :show]
+
   end
 
 

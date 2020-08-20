@@ -26,12 +26,19 @@ defmodule PoolWatchWeb.V1.UserPoolView do
 
 
   def render("user_pool.json", %{user_pool: user_pool}) do
+    pool =
+      if Ecto.assoc_loaded?(user_pool.pool) do
+        render_one(user_pool.pool, PoolWatchWeb.V1.PoolView, "pool.json")
+      else
+        nil
+      end
+
     %{
       id: user_pool.id,
       is_active: user_pool.is_active,
       priv_key: user_pool.priv_key,
       pub_key: user_pool.pub_key,
-      pool: render_one(user_pool.pool, PoolWatchWeb.V1.PoolView, "pool.json")
+      pool: pool
     }
   end
 end
