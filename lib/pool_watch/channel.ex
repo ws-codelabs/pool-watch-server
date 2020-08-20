@@ -101,4 +101,34 @@ defmodule PoolWatch.Channel do
   def change_channel_info(%ChannelInfo{} = channel_info, attrs \\ %{}) do
     ChannelInfo.changeset(channel_info, attrs)
   end
+
+  alias PoolWatch.Channel.PoolChannels
+  alias PoolWatch.Pool.UserPools
+  alias PoolWatch.Account.User
+
+  def list_pool_channel(%User{id: user_id}, pool_id) when is_binary(pool_id) do
+    query =
+      from pc in PoolChannels,
+      where: pc.user_id == ^user_id and pc.pool_id == ^pool_id,
+      select: pc
+
+    Repo.all(query)
+  end
+
+  def list_pool_channel(%User{id: user_id}, pool_ids) when is_list(pool_ids) do
+    query =
+      from pc in PoolChannels,
+      where: pc.user_id == ^user_id and pc.pool_id in ^pool_ids,
+      select: pc
+
+    Repo.all(query)
+  end
+
+
+  def change_pool_status(%PoolChannels{} = pool_channels, status) do
+    pool_channels
+    |> PoolChannels.changeset(%{is_active: status})
+    |> Repo.update()
+  end
+
 end

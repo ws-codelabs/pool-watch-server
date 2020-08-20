@@ -15,7 +15,6 @@ defmodule PoolWatch.Repo.Migrations.CreateUserPools do
 
     create index(:user_pools, [:user_id])
     create index(:user_pools, [:pool_id])
-    create unique_index(:user_pools, [:pub_key])
-    create unique_index(:user_pools, [:priv_key])
+    create unique_index(:user_pools, [:user_id, :pool_id])
   end
 end

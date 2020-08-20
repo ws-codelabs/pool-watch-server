@@ -6,7 +6,7 @@ defmodule PoolWatch.Pool do
   import Ecto.Query, warn: false
   alias PoolWatch.Repo
 
-  alias PoolWatch.Pool.Info
+  alias PoolWatch.Pool.PoolInfo
   alias PoolWatch.Account.User
 
   @doc """
@@ -15,11 +15,11 @@ defmodule PoolWatch.Pool do
   ## Examples
 
       iex> list_pool_infos()
-      [%Info{}, ...]
+      [%PoolInfo{}, ...]
 
   """
   def list_pool_infos do
-    Repo.all(Info)
+    Repo.all(PoolInfo)
   end
 
   @doc """
@@ -29,14 +29,14 @@ defmodule PoolWatch.Pool do
 
   ## Examples
 
-      iex> get_info!(123)
-      %Info{}
+      iex> get_info(123)
+      %PoolInfo{}
 
-      iex> get_info!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_info(456)
+      nil
 
   """
-  def get_info!(id), do: Repo.get!(Info, id)
+  def get_info(id), do: Repo.get(PoolInfo, id)
 
 
   @doc """
@@ -45,14 +45,14 @@ defmodule PoolWatch.Pool do
     ## Examples
 
       iex> search_pool(valid_query)
-      %Info{}
+      %PoolInfo{}
 
       iex> search_pool(invalid_query)
       nil
   """
   def search_pool(query) do
     query =
-      from p in Info,
+      from p in PoolInfo,
       where: p.hash == ^query or p.metadata_hash == ^query,
       select: p
 
@@ -65,15 +65,15 @@ defmodule PoolWatch.Pool do
   ## Examples
 
       iex> create_pool(%{field: value})
-      {:ok, %Info{}}
+      {:ok, %PoolInfo{}}
 
       iex> create_pool(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_pool(attrs \\ %{}) do
-    %Info{}
-    |> Info.changeset(attrs)
+    %PoolInfo{}
+    |> PoolInfo.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -89,7 +89,7 @@ defmodule PoolWatch.Pool do
     Inserts multiple pool at one go
   """
   def insert_all_pool(pool_data) do
-    Repo.insert_all(Info, pool_data, [
+    Repo.insert_all(PoolInfo, pool_data, [
       on_conflict: :replace_all,
       conflict_target: "hash"
     ])
@@ -101,15 +101,15 @@ defmodule PoolWatch.Pool do
   ## Examples
 
       iex> update_info(info, %{field: new_value})
-      {:ok, %Info{}}
+      {:ok, %PoolInfo{}}
 
       iex> update_info(info, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_info(%Info{} = info, attrs) do
-    info
-    |> Info.changeset(attrs)
+  def update_info(%PoolInfo{} = pool_info, attrs) do
+    pool_info
+    |> PoolInfo.changeset(attrs)
     |> Repo.update()
   end
 
@@ -119,13 +119,13 @@ defmodule PoolWatch.Pool do
   ## Examples
 
       iex> delete_info(info)
-      {:ok, %Info{}}
+      {:ok, %PoolInfo{}}
 
       iex> delete_info(info)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_info(%Info{} = info) do
+  def delete_info(%PoolInfo{} = info) do
     Repo.delete(info)
   end
 
@@ -135,11 +135,11 @@ defmodule PoolWatch.Pool do
   ## Examples
 
       iex> change_info(info)
-      %Ecto.Changeset{data: %Info{}}
+      %Ecto.Changeset{data: %PoolInfo{}}
 
   """
-  def change_info(%Info{} = info, attrs \\ %{}) do
-    Info.changeset(info, attrs)
+  def change_info(%PoolInfo{} = info, attrs \\ %{}) do
+    PoolInfo.changeset(info, attrs)
   end
 
   alias PoolWatch.Pool.UserPools
@@ -149,7 +149,7 @@ defmodule PoolWatch.Pool do
 
     ## Examples
 
-        iex> create_user_pools(%User{}, %Info{})
+        iex> create_user_pools(%User{}, %PoolInfo{})
         {:ok, %UserPools{}}
 
         iex> create_user_pools(%User{is_verified: false}, pool_info)
@@ -163,7 +163,7 @@ defmodule PoolWatch.Pool do
 
   """
   def create_user_pools(%User{is_verified: false}, _pool_info), do: {:error, :USER_NOT_VERIFIED}
-  def create_user_pools(%User{id: user_id}, %Info{id: pool_id}) do
+  def create_user_pools(%User{id: user_id}, %PoolInfo{id: pool_id}) do
     attrs = %{
       pub_key: "pb_" <> PoolWatch.Utils.genrate_hash(),
       priv_key: "secret_" <> PoolWatch.Utils.genrate_hash()
@@ -173,8 +173,96 @@ defmodule PoolWatch.Pool do
     |> Repo.insert()
   end
 
-  def create_user_pools(_, %Info{}), do: {:error, :INVALID_USER}
+  def create_user_pools(_, %PoolInfo{}), do: {:error, :INVALID_USER}
   def create_user_pools(_, _), do: {:error, :INVALID_POOL}
+
+  @doc """
+    gives lists of user pools
+
+    ## Examples
+
+        iex> list_user_pools(%User{})
+        [%UserPools{}]
+
+        iex> list_user_pools(invalid_user)
+        []
+
+  """
+
+  def list_user_pools(%User{id: user_id}) do
+    query =
+      from up in UserPools,
+      where: up.user_id == ^user_id,
+      preload: [:pools],
+      select: up
+
+    Repo.all(query)
+  end
+
+  def list_user_pools(_), do: []
+
+  @doc """
+    Returns user_pool detail
+
+    ## Examples
+
+        iex> get_user_pool(%User{}, valid_pool_id)
+        %UserPools{}
+
+        iex> get_user_pool(user, invalid_id)
+        nil
+
+  """
+  def get_user_pool(%User{id: user_id}, user_pool_id) when is_binary(user_pool_id) do
+    Repo.get_by(UserPools, user_id: user_id, id: user_pool_id)
+  end
+
+  def get_user_pool(_, _), do: nil
+
+  @doc """
+    Updates User Pool
+
+    ## Examples
+
+        iex> update_user_pool(%UserPools{}, valid_attrs)
+        {:ok, %UserPools{}}
+
+        iex> update_user_pool(%UserPools{}, invalid_attrs)
+        {:error, %Ecto.Changeset{}}
+
+        iex> update_user_pool(invalid_user_pool, attrs)
+        {:error, :INVALID_USER_POOL}
+
+  """
+  def update_user_pool(%UserPools{} = user_pool, attrs) do
+    user_pool
+    |> UserPools.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_user_pool(_, _), do: {:error, :INVALID_USER_POOL}
+
+  def change_user_pool_status(user_pool, status) do
+    update_user_pool(user_pool, %{is_active: status})
+  end
+
+  @doc """
+    Removes user_pools
+
+    ## Examples
+
+        iex> delete_user_pools(%UserPools{})
+        {:ok, %UserPools{}}
+
+        iex> delete_user_pools(invalid_user_pool)
+        {:error, :INVALID_USER_POOL}
+
+  """
+  def delete_user_pools(%UserPools{} = user_pool) do
+    Repo.delete(user_pool)
+  end
+
+  def delete_user_pools(_), do: {:error, :INVALID_USER_POOL}
 
 
 end

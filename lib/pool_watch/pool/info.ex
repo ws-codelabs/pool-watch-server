@@ -1,4 +1,4 @@
-defmodule PoolWatch.Pool.Info do
+defmodule PoolWatch.Pool.PoolInfo do
   use Ecto.Schema
   import Ecto.Changeset
 
