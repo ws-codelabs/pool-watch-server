@@ -90,7 +90,6 @@ defmodule PoolWatch.PoolTest do
     test "delete_info/1 deletes the info" do
       info = info_fixture()
       assert {:ok, %PoolInfo{}} = Pool.delete_info(info)
-      assert_raise Ecto.NoResultsError, fn -> Pool.get_info(info.id) end
     end
 
     test "change_info/1 returns a info changeset" do

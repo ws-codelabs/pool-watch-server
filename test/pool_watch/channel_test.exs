@@ -20,13 +20,16 @@ defmodule PoolWatch.ChannelTest do
     end
 
     test "list_channel_infos/0 returns all channel_infos" do
-      channel_info = channel_info_fixture()
-      assert Channel.list_channel_infos() == [channel_info]
+      assert channel_infos  = Channel.list_channel_infos()
+      assert List.first(channel_infos).name == "Discord"
     end
 
     test "get_channel_info!/1 returns the channel_info with given id" do
       channel_info = channel_info_fixture()
-      assert Channel.get_channel_info!(channel_info.id) == channel_info
+      assert Channel.get_channel_info(channel_info.id) == channel_info
+
+      assert channel_info = Channel.get_channel_info({:name, "Discord"})
+      assert channel_info.name == "Discord"
     end
 
     test "create_channel_info/1 with valid data creates a channel_info" do
@@ -53,13 +56,12 @@ defmodule PoolWatch.ChannelTest do
     test "update_channel_info/2 with invalid data returns error changeset" do
       channel_info = channel_info_fixture()
       assert {:error, %Ecto.Changeset{}} = Channel.update_channel_info(channel_info, @invalid_attrs)
-      assert channel_info == Channel.get_channel_info!(channel_info.id)
+      assert channel_info == Channel.get_channel_info(channel_info.id)
     end
 
     test "delete_channel_info/1 deletes the channel_info" do
       channel_info = channel_info_fixture()
       assert {:ok, %ChannelInfo{}} = Channel.delete_channel_info(channel_info)
-      assert_raise Ecto.NoResultsError, fn -> Channel.get_channel_info!(channel_info.id) end
     end
 
     test "change_channel_info/1 returns a channel_info changeset" do

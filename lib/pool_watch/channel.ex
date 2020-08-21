@@ -28,14 +28,17 @@ defmodule PoolWatch.Channel do
 
   ## Examples
 
-      iex> get_channel_info!(123)
+      iex> get_channel_info(123)
       %ChannelInfo{}
 
-      iex> get_channel_info!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_channel_info(invalid_id)
+      nil
+
 
   """
-  def get_channel_info!(id), do: Repo.get!(ChannelInfo, id)
+  def get_channel_info(id) when is_binary(id), do: Repo.get(ChannelInfo, id)
+
+  def get_channel_info({:name, name}), do: Repo.get_by(ChannelInfo, name: name)
 
   @doc """
   Creates a channel_info.
