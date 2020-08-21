@@ -6,7 +6,7 @@ defmodule PoolWatch.Repo.Migrations.CreateChannelInfos do
       add :id, :binary_id, default: fragment("uuid_generate_v4()"), primary_key: true
       add :name, :string, null: false
       add :logo, :string
-      add :inputs, {:array, :map}, null: false
+      add :inputs, {:array, :map}
       add :is_active, :boolean, default: true, null: false
 
       timestamps()

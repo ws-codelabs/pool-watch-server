@@ -18,7 +18,12 @@ defmodule PoolWatch.Channel do
 
   """
   def list_channel_infos do
-    Repo.all(ChannelInfo)
+    query =
+      from c in ChannelInfo,
+      where: c.is_active == true,
+      select: c
+
+    Repo.all(query)
   end
 
   @doc """

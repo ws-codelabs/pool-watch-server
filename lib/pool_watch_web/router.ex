@@ -41,6 +41,7 @@ defmodule PoolWatchWeb.Router do
 
     resources "/user", UserController, except: [:create, :new, :edit, :update]
     resources "/user_pools", UserPoolController, except: [:new, :edit, :show]
+    resources "/channel", ChannelController, only: [:index]
 
   end
 

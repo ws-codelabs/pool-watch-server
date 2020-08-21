@@ -17,7 +17,7 @@ defmodule PoolWatch.Channel.ChannelInfo do
   def changeset(channel_info, attrs) do
     channel_info
     |> cast(attrs, [:name, :logo, :inputs, :is_active])
-    |> validate_required([:name, :inputs])
+    |> validate_required([:name])
     |> unique_constraint(:name)
   end
 end
