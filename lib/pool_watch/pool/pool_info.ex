@@ -15,6 +15,8 @@ defmodule PoolWatch.Pool.PoolInfo do
     field :reward_address, :string
     field :ticker, :string
     field :url, :string
+    field :name, :string
+    field :additional_info, :map
 
     timestamps()
   end
@@ -22,7 +24,7 @@ defmodule PoolWatch.Pool.PoolInfo do
   @doc false
   def changeset(info, attrs) do
     info
-    |> cast(attrs, [:url, :metadata_hash, :hash, :pledge, :margin, :fixed_cost, :reward_address, :ticker, :home_url, :description])
+    |> cast(attrs, [:name, :additional_info, :url, :metadata_hash, :hash, :pledge, :margin, :fixed_cost, :reward_address, :ticker, :home_url, :description])
     |> validate_required([:metadata_hash, :hash])
   end
 end

@@ -103,7 +103,6 @@ defmodule PoolWatch.Channel do
   end
 
   alias PoolWatch.Channel.PoolChannels
-  alias PoolWatch.Pool.UserPools
   alias PoolWatch.Account.User
 
   def list_pool_channel(%User{id: user_id}, pool_id) when is_binary(pool_id) do

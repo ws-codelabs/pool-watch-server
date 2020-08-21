@@ -3,6 +3,7 @@ defmodule PoolWatch.Query.StakePoolQuery do
     contains StakePool related query
   """
   alias PoolWatch.Utils
+  alias PoolWatch.Pool.PoolInfo
 
   def get_stakepool_aggregate_data() do
     query = """
@@ -78,7 +79,7 @@ defmodule PoolWatch.Query.StakePoolQuery do
     Enum.reduce(awaits, [], fn batch, pools ->
       new_pool_data =
         batch
-        |> Task.await()
+        |> Task.await(50_000)
         |> format_pool_data()
         |> Enum.filter(&(is_binary(&1[:metadata_hash]) and is_binary(&1[:hash])))
 
@@ -93,30 +94,61 @@ defmodule PoolWatch.Query.StakePoolQuery do
   end
 
   def format_pool_data(data) when is_map(data) do
-    timestamp =
-      NaiveDateTime.utc_now()
-      |> NaiveDateTime.truncate(:second)
-
     case Map.get(data, :inserted_at) do
       nil ->
-        %{
-          description: nil,
-          fixed_cost: Utils.to_int(data["fixedCost"]),
-          hash: data["hash"],
-          home_url: nil,
-          margin: Utils.to_float(data["margin"]),
-          metadata_hash: data["metadataHash"],
-          pledge: Utils.to_int(data["pledge"]),
-          reward_address: data["rewardAddress"],
-          ticker: nil,
-          url: nil,
-          inserted_at: timestamp,
-          updated_at: timestamp
-        }
-
+        cast_pool_data(data)
       _ ->
         data
 
     end
   end
+
+  defp cast_pool_data(data) do
+    timestamp =
+      NaiveDateTime.utc_now()
+      |> NaiveDateTime.truncate(:second)
+
+    %{
+      fixed_cost: Utils.to_int(data["fixedCost"]),
+      hash: data["hash"],
+      margin: Utils.to_float(data["margin"]),
+      metadata_hash: data["metadataHash"],
+      pledge: Utils.to_int(data["pledge"]),
+      reward_address: data["rewardAddress"],
+      url: data["url"],
+      inserted_at: timestamp,
+      updated_at: timestamp
+    }
+  end
+
+  def fetch_extra_pool_info(%PoolInfo{url: url}) do
+    fetch_extra_pool_info(url)
+  end
+
+  def fetch_extra_pool_info(url) when is_binary(url) do
+    curl_params = [
+      "--connect-timeout", "5",
+      "--retry", "2",
+      "--retry-delay", "0",
+      "--retry-max-time",  "60",
+      url
+    ]
+
+    case System.cmd("curl", curl_params) do
+      {body, _} ->
+        Jason.decode(body)
+        |> format_extra_pool_info()
+    end
+  end
+
+  defp format_extra_pool_info({:ok, data}) when is_map(data) do
+    %{
+      name: Map.get(data, "name"),
+      description: Map.get(data, "description"),
+      ticker: Map.get(data, "ticker"),
+      home_url: Map.get(data, "homepage")
+    }
+  end
+
+  defp format_extra_pool_info(_), do: %{}
 end

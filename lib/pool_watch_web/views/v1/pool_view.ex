@@ -23,7 +23,9 @@ defmodule PoolWatchWeb.V1.PoolView do
       pledge: pools.pledge,
       reward_address: pools.reward_address,
       ticker: pools.ticker,
-      url: pools.url
+      url: pools.url,
+      name: pools.name,
+      additional_info: pools.additional_info
     }
   end
 
