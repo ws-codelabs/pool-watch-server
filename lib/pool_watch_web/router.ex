@@ -42,6 +42,7 @@ defmodule PoolWatchWeb.Router do
     resources "/user", UserController, except: [:create, :new, :edit, :update]
     resources "/user_pools", UserPoolController, except: [:new, :edit, :show]
     resources "/channel", ChannelController, only: [:index]
+    resources "/pool_channel", PoolChannelController, except: [:new, :edit, :show]
 
   end
 
@@ -56,6 +57,8 @@ defmodule PoolWatchWeb.Router do
   # as long as you are also using SSL (which you should anyway).
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
+
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
 
     scope "/" do
       pipe_through :browser

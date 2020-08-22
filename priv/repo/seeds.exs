@@ -14,13 +14,23 @@ channels = [
   %{
     name: "Discord", logo: "fa-discord",
     inputs: [
-      %{"label" => "WebHook Url", "type" => "TEXT_BOX", "is_required" => true}
+      %{
+        "label" => "WebHook Url",
+        "type" => "TEXT_BOX",
+        "is_required" => true,
+        "key" => "web_hook_url"
+      }
     ]
   },
   %{
     name: "Email", logo: "fa-envelope",
     inputs: [
-      %{"label" => "Email Address", "type" => "EMAIL", "is_required" => true}
+      %{
+        "label" => "Email Address",
+        "type" => "EMAIL",
+        "is_required" => true,
+        "key" => "email_address"
+      }
     ]
   },
   %{

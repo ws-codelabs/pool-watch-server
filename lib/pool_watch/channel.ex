@@ -112,11 +112,29 @@ defmodule PoolWatch.Channel do
 
   alias PoolWatch.Channel.PoolChannels
   alias PoolWatch.Account.User
+  alias PoolWatch.Pool.UserPools
+  alias PoolWatch.Channel.ChannelInfo
 
+  @doc """
+    gives list of pool channel
+
+    ## Examples
+
+        iex> list_pool_channel(%User{}, valid_pool_id)
+        [%PoolChannels{}]
+
+        iex> list_pool_channel(%User{}, invalid_pool_id)
+        []
+
+        iex> list_pool_channel(%User{}, list_of_ids)
+        [%PoolChannels{}]
+
+  """
   def list_pool_channel(%User{id: user_id}, pool_id) when is_binary(pool_id) do
     query =
       from pc in PoolChannels,
       where: pc.user_id == ^user_id and pc.pool_id == ^pool_id,
+      preload: [:pool],
       select: pc
 
     Repo.all(query)
@@ -126,11 +144,51 @@ defmodule PoolWatch.Channel do
     query =
       from pc in PoolChannels,
       where: pc.user_id == ^user_id and pc.pool_id in ^pool_ids,
+      preload: [:pool],
       select: pc
 
     Repo.all(query)
   end
 
+  @doc """
+    Creates new pool channel
+
+    ## Examples
+
+        iex> create_pool_channel(%UserPools{}, %ChannelInfo{}, valid_attrs)
+        {:ok, %PoolChannels{}}
+
+        iex> create_pool_channel(%UserPools{}, %ChannelInfo{}, invalid_attrs)
+        {:ok, %PoolChannels{}}
+
+  """
+  def create_pool_channel(%UserPools{user_id: u_id, pool_id: p_id}, %ChannelInfo{id: id}, attrs) do
+    %PoolChannels{user_id: u_id, pool_id: p_id, channel_id: id}
+    |> PoolChannels.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_pool_channel(_, %ChannelInfo{}, _attrs), do: {:error, :INVALID_USER_POOL}
+
+  def create_pool_channel(_, _, _attrs), do: {:error, :INVALID_CHANNEL}
+
+  def get_pool_channel(%User{id: user_id}, id) do
+    Repo.get_by(PoolChannels, user_id: user_id, id: id)
+  end
+
+  def update_pool_channel(%PoolChannels{} = pool_channel, attrs) do
+    pool_channel
+    |> PoolChannels.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_pool_channel(_, _), do: {:error, :INVALID_POOL_CHANNEL}
+
+  def delete_pool_channel(%PoolChannels{} = pool_channel) do
+    Repo.delete(pool_channel)
+  end
+
+  def delete_pool_channel(_), do: {:error, :INVALID_POOL_CHANNEL}
 
   def change_pool_status(%PoolChannels{} = pool_channels, status) do
     pool_channels
