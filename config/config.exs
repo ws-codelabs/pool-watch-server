@@ -33,6 +33,11 @@ config :pool_watch, PoolWatch.Account.Guardian,
   issuer: "pool_watch",
   secret_key: "OBXQlm9+LZCuDd0fGSCU+jeJ/ZrSzgbtROHOueZJW04qk6yMpQ61/mzF2r4Lkpfn"
 
+config :pool_watch, :twitter, %{
+  consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
+  consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET")
+}
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

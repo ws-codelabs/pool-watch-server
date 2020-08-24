@@ -12,7 +12,13 @@ defmodule PoolWatchWeb.V1.UserView do
   end
 
   def render("session.json", %{session: %{user_info: user, token: token}}) do
-    %{data: %{ user_info: render_one(user, UserView, "user.json"), token: token}}
+    %{
+      data: %{
+        session: %{
+          user_info: render_one(user, UserView, "user.json"), token: token
+        }
+      }
+    }
   end
 
   def render("user.json", %{user: user}) do
