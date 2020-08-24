@@ -90,7 +90,7 @@ defmodule PoolWatch.Pool do
   """
   def insert_all_pool(pool_data) do
     Repo.insert_all(PoolInfo, pool_data, [
-      on_conflict: :replace_all,
+      on_conflict: :nothing,
       conflict_target: "hash"
     ])
   end
