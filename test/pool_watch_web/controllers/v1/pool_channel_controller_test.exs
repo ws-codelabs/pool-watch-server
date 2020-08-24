@@ -5,12 +5,12 @@ defmodule PoolWatchWeb.V1.PoolChannelControllerTest do
   alias PoolWatch.Pool
 
   @valid_channel %{
-    "info" => %{"url" => "url"},
+    "info" => %{"web_hook_url" => "https://discordapp.com/api/webhooks/api_key/channel_id"},
     "is_active" => true
   }
 
   @update_channel %{
-    "info" => %{"url" => "update_url"},
+    "info" => %{"web_hook_url" => "https://discordapp.com/api/webhooks/new__key/new_channel_id"},
     "is_active" => false
   }
 

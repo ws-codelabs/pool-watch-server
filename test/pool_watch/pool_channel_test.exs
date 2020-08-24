@@ -5,16 +5,18 @@ defmodule PoolWatch.PoolChannelTtest do
   alias PoolWatch.Pool
 
   @valid_channel %{
-    "info" => %{"url" => "url"},
+    "info" => %{"web_hook_url" => "https://discordapp.com/api/webhooks/api_key/channel_id"},
     "is_active" => true
-  }
-  @invalid_channel %{
-    "info" => nil,
-    "is_active" => nil
   }
 
   @update_channel %{
-    "info" => %{"url" => "updated_url"}
+    "info" => %{"web_hook_url" => "https://discordapp.com/api/webhooks/new__key/new_channel_id"},
+    "is_active" => false
+  }
+
+  @invalid_channel %{
+    "info" => nil,
+    "is_active" => nil
   }
 
   def user_pool_fixture(attrs \\ @valid_channel) do

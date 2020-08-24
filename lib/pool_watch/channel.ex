@@ -150,6 +150,16 @@ defmodule PoolWatch.Channel do
     Repo.all(query)
   end
 
+  def list_pool_channel(user_id, pool_id, channel_id) do
+    query =
+      from pc in PoolChannels,
+      where: pc.user_id == ^user_id and pc.pool_id == ^pool_id and pc.channel_id == ^channel_id,
+      select: pc
+
+    Repo.all(query)
+
+  end
+
   @doc """
     Creates new pool channel
 
@@ -162,8 +172,8 @@ defmodule PoolWatch.Channel do
         {:ok, %PoolChannels{}}
 
   """
-  def create_pool_channel(%UserPools{user_id: u_id, pool_id: p_id}, %ChannelInfo{id: id}, attrs) do
-    %PoolChannels{user_id: u_id, pool_id: p_id, channel_id: id}
+  def create_pool_channel(%UserPools{user_id: u_id, pool_id: p_id}, %ChannelInfo{id: id, name: name}, attrs) do
+    %PoolChannels{user_id: u_id, pool_id: p_id, channel_id: id, channel_name: name}
     |> PoolChannels.changeset(attrs)
     |> Repo.insert()
   end
