@@ -1,13 +1,19 @@
 use Mix.Config
 
+database_url =
+  System.get_env("DATABASE_URL") ||
+    raise """
+    environment variable DATABASE_URL is missing.
+    For example: ecto://USER:PASS@HOST/DATABASE
+    """
+
+
+
 # Configure your database
 config :pool_watch, PoolWatch.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "pool_watch_dev",
-  hostname: "localhost",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  url: database_url,
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  show_sensitive_data_on_connection_error: true
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -16,7 +22,7 @@ config :pool_watch, PoolWatch.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :pool_watch, PoolWatchWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: String.to_integer(System.get_env("PORT") || "4000")],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
