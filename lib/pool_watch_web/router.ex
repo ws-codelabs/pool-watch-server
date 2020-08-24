@@ -29,7 +29,7 @@ defmodule PoolWatchWeb.Router do
   scope "/api/v1", PoolWatchWeb.V1, as: :api_v1 do
     pipe_through :api
 
-    resources "/pools", PoolController, only: [:show]
+    get "/pools", PoolController, :search
     resources "/user", UserController, only: [:create, :update]
     resources "/token", TokenController, only: [:create]
     post "/guest/pools/", UserPoolController, :guest_create

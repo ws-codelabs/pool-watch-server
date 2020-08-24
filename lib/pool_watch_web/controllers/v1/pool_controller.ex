@@ -4,7 +4,7 @@ defmodule PoolWatchWeb.V1.PoolController do
   alias PoolWatch.Pool.PoolInfo
   alias PoolWatch.Query.StakePoolQuery
 
-  def show(conn, %{"id" => query}) do
+  def search(conn, %{"query" => query}) do
     pool_data =
       query
       |> Pool.search_pool()
