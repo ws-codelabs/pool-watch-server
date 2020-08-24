@@ -11,7 +11,7 @@ defmodule PoolWatchWeb.Endpoint do
   ]
 
   socket "/socket", PoolWatchWeb.UserSocket,
-    websocket: true,
+    websocket: [time_out: 45_000],
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
