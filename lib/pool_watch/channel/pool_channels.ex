@@ -31,25 +31,26 @@ defmodule PoolWatch.Channel.PoolChannels do
     |> Validators.validate_pool_channel_input()
   end
 
-  defp cast_channel_name(%Ecto.Changeset{valid?: true, data: data} = changeset) do
-    updated_data =
-      case data do
-        %PoolWatch.Channel.PoolChannels{channel_name: name} when is_binary(name) ->
-          Map.put(data, :channel_name, String.upcase(name))
+  defp cast_channel_name(%Ecto.Changeset{valid?: true, changes: %{info: info}, data: data} = changeset)
+    when is_map(info) do
+      updated_data =
+        case data do
+          %PoolWatch.Channel.PoolChannels{channel_name: name} when is_binary(name) ->
+            Map.put(data, :channel_name, String.upcase(name))
 
-        %PoolWatch.Channel.PoolChannels{channel_id: channel_id} ->
-          name =
-            PoolWatch.Channel.get_channel_info(channel_id)
-            |> Map.get(:name)
-            |> String.upcase()
+          %PoolWatch.Channel.PoolChannels{channel_id: channel_id} ->
+            name =
+              PoolWatch.Channel.get_channel_info(channel_id)
+              |> Map.get(:name)
+              |> String.upcase()
 
 
-          Map.put(data, :channel_name, String.upcase(name))
+            Map.put(data, :channel_name, String.upcase(name))
 
-      end
+        end
 
-    changeset
-    |> Map.put(:data, updated_data)
+      changeset
+      |> Map.put(:data, updated_data)
   end
 
   defp cast_channel_name(changeset), do: changeset
