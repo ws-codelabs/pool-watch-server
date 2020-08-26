@@ -4,6 +4,7 @@ defmodule PoolWatch.Query.StakePoolQuery do
   """
   alias PoolWatch.Utils
   alias PoolWatch.Pool.PoolInfo
+  alias PoolWatch.Query.CommonFields
 
   def get_stakepool_aggregate_data() do
     query = """
@@ -41,14 +42,7 @@ defmodule PoolWatch.Query.StakePoolQuery do
       """
         {
           stakePools(offset: #{offset}){
-            hash,
-            url,
-            metadataHash,
-            pledge,
-            margin,
-            fixedCost,
-            rewardAddress,
-            fixedCost
+            #{CommonFields.stake_pool_fields}
           }
         }
       """
