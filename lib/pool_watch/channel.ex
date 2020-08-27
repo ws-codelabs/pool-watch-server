@@ -114,6 +114,7 @@ defmodule PoolWatch.Channel do
   alias PoolWatch.Account.User
   alias PoolWatch.Pool.UserPools
   alias PoolWatch.Channel.ChannelInfo
+  alias PoolWatch.Pool.PoolInfo
 
   @doc """
     gives list of pool channel
@@ -150,6 +151,19 @@ defmodule PoolWatch.Channel do
     Repo.all(query)
   end
 
+
+  def list_pool_channel(%PoolInfo{id: pool_id}) do
+    query =
+      from up in UserPools,
+      join: pc in PoolChannels,
+      on: pc.pool_id == up.pool_id and pc.user_id == up.user_id,
+      where: up.is_active == true and pc.is_active == true and up.pool_id == ^pool_id,
+      select: pc
+
+    Repo.all(query)
+  end
+
+
   def list_pool_channel(user_id, pool_id, channel_id) do
     query =
       from pc in PoolChannels,
@@ -159,6 +173,7 @@ defmodule PoolWatch.Channel do
     Repo.all(query)
 
   end
+
 
   @doc """
     Creates new pool channel

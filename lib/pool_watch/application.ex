@@ -11,6 +11,8 @@ defmodule PoolWatch.Application do
       PoolWatch.Account.TokenRegistry,
       # Start the Ecto repository
       PoolWatch.Repo,
+      # load channels to state
+      PoolWatch.Listener.ChannelCache,
       # Start the Telemetry supervisor
       PoolWatchWeb.Telemetry,
       # Start the PubSub system

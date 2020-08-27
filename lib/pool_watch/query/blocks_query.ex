@@ -1,6 +1,7 @@
 defmodule PoolWatch.Query.BlocksQuery do
   alias PoolWatch.Query.CommonFields
   alias PoolWatch.Utils
+  alias PoolWatch.Blockchain.Blocks
 
 
   def get_latest_block() do
@@ -33,6 +34,7 @@ defmodule PoolWatch.Query.BlocksQuery do
       {:ok, %Neuron.Response{body: %{"data" => %{"blocks" => [block]}}}} ->
         block
         |> Utils.to_snake_case()
+        |> Utils.struct_from_map(as: %Blocks{})
 
       _ ->
         nil

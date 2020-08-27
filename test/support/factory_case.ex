@@ -3,7 +3,13 @@ defmodule PoolWatch.FactoryCase do
   alias PoolWatch.Pool
 
   @user_attrs %{email: "e@e.com", is_verified: true}
-  @pool_attrs %{hash: "default-pool-hash", metadata_hash: "default_metadata_hash"}
+  @pool_attrs %{
+    hash: "default-pool-hash",
+    metadata_hash: "default_metadata_hash",
+    ticker: "TEST_POOL_WATCH",
+    name: "Test pool Watch"
+
+  }
 
   def get_user(attrs \\ @user_attrs) do
     {:ok, user} =

@@ -38,6 +38,27 @@ config :pool_watch, :twitter, %{
   consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET")
 }
 
+config :pool_watch, :notification_settings, %{
+  send_default_notification: System.get_env("SEND_DEFAULT_NOTIFICATION") == "true",
+  default_notification_channels: [
+    %{
+        "name" => "Twitter",
+        "info" => %{
+          "key" => System.get_env("TWITTER_USER_KEY"),
+          "secret" => System.get_env("TWITTER_USER_SECRET"),
+          "consumer_key" => System.get_env("TWITTER_DEFAULT_CONSUMER_KEY"),
+          "consumer_secret" => System.get_env("TWITTER_DEFAULT_CONSUMER_SECRET")
+        }
+    },
+    %{
+      "name" => "Discord",
+      "info" => %{
+        "web_hool_url" => "xyz.com"
+      }
+    }
+  ]
+}
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

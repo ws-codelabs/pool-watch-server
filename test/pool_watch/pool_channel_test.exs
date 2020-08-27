@@ -19,6 +19,11 @@ defmodule PoolWatch.PoolChannelTtest do
     "is_active" => nil
   }
 
+  @valid_twitter %{
+    info: %{"key" => "t_key", "secret" => "s_key", "username" => "u1"},
+    is_active: true
+  }
+
   def user_pool_fixture(attrs \\ @valid_channel) do
     channel_info = Channel.get_channel_info({:name, "Discord"})
     {:ok, user_pools} = Pool.create_user_pools(get_user(), get_pool())
@@ -54,6 +59,25 @@ defmodule PoolWatch.PoolChannelTtest do
       assert [found_u_channel] = Channel.list_pool_channel(user, [pool.id])
       assert found_u_channel.id == user_channel.id
 
+    end
+
+    test "list_pool_channel also gives list of valid channel for notification" do
+      {:ok, u_pools} = Pool.create_user_pools(get_user(), get_pool())
+      c_discord = Channel.get_channel_info({:name, "Discord"})
+      c_twitter = Channel.get_channel_info({:name, "Twitter"})
+
+      assert {:ok, u_d_channel} = Channel.create_pool_channel(u_pools, c_discord, @valid_channel)
+      assert {:ok, u_t_channel} = Channel.create_pool_channel(u_pools, c_twitter, @valid_twitter)
+
+      assert [u_d1, u_t1] = Channel.list_pool_channel(get_pool())
+      assert u_d_channel.id == u_d1.id
+      assert u_t_channel.id == u_t1.id
+
+      assert {:ok, _} = Channel.update_pool_channel(u_d_channel, %{is_active: false})
+      assert [u_t1] == Channel.list_pool_channel(get_pool())
+
+      assert Pool.update_user_pool(u_pools, %{is_active: false})
+      assert [] == Channel.list_pool_channel(get_pool())
     end
 
     test "update_pool_channel updates pool channel" do

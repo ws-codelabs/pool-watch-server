@@ -120,6 +120,18 @@ defmodule PoolWatch.Query.StakePoolQuery do
   end
 
   def fetch_extra_pool_info(url) when is_binary(url) do
+    case HTTPoison.get(url, [], follow_redirect: true) do
+      {:ok, %HTTPoison.Response{body: body}} ->
+        body
+        |> Jason.decode()
+        |> format_extra_pool_info()
+
+      _ ->
+        fetch_with_curl(url)
+    end
+  end
+
+  defp fetch_with_curl(url) when is_binary(url) do
     curl_params = [
       "--connect-timeout", "5",
       "--retry", "2",
