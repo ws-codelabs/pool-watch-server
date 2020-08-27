@@ -8,7 +8,7 @@ defmodule PoolWatch.Query.BlocksQueryTest do
 
   test "get_block_after gives block data right after the block number" do
     assert block_data = BlocksQuery.get_block_after(460000)
-    assert block_data["number"] == 460001
+    assert block_data.number == 460001
   end
 
 end

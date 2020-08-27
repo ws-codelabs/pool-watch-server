@@ -41,7 +41,7 @@ defmodule PoolWatchWeb.V1.PoolChannelControllerTest do
         |> json_response(200)
 
       assert response["id"] == user_channel.id
-      assert response["channel"]["id"] == channel_info.id
+      assert response["channel_id"] == channel_info.id
 
     end
 
@@ -58,7 +58,7 @@ defmodule PoolWatchWeb.V1.PoolChannelControllerTest do
         |> post(Routes.api_v1_pool_channel_path(conn, :create), params)
         |> json_response(200)
 
-      assert response["channel"]["id"] == channel_info.id
+      assert response["channel_id"] == channel_info.id
       assert response["info"] == @valid_channel["info"]
     end
 
