@@ -17,9 +17,10 @@ defmodule PoolWatch.Notification do
 
   def fetch_infos(%PoolInfo{} = pool_info, _) do
     pool_info
-    |> PoolWatch.Channel.list_pool_channel(pool_info)
+    |> PoolWatch.Channel.list_pool_channel()
     |> Enum.map(&prepare_data/1)
-    |> Enum.find(&is_map/1)
+    |> Enum.filter(&is_map/1)
+
   end
 
   def prepare_data(%PoolChannels{channel_id: c_id, info: info}) do
