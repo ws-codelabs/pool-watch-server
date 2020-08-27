@@ -135,7 +135,6 @@ defmodule PoolWatch.Channel do
     query =
       from pc in PoolChannels,
       where: pc.user_id == ^user_id and pc.pool_id == ^pool_id,
-      preload: [:channel],
       select: pc
 
     Repo.all(query)
@@ -145,7 +144,6 @@ defmodule PoolWatch.Channel do
     query =
       from pc in PoolChannels,
       where: pc.user_id == ^user_id and pc.pool_id in ^pool_ids,
-      preload: [:channel],
       select: pc
 
     Repo.all(query)

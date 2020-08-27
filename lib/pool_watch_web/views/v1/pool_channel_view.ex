@@ -13,17 +13,10 @@ defmodule PoolWatchWeb.V1.PoolChannelView do
 
 
   def render("pool_channel.json", %{pool_channel: pool_channel}) do
-    channel =
-      if Ecto.assoc_loaded?(pool_channel.channel) do
-        render_one(pool_channel.channel, PoolWatchWeb.V1.ChannelView, "channel.json")
-      else
-        nil
-      end
-
     %{
       id: pool_channel.id,
       is_active: pool_channel.is_active,
-      channel: channel,
+      channel_id: pool_channel.channel_id,
       info: pool_channel.info
     }
   end

@@ -19,8 +19,6 @@ defmodule PoolWatchWeb.V1.PoolChannelController do
     channel = Channel.get_channel_info(cl_id)
 
     with {:ok, pool_channel} <- Channel.create_pool_channel(user_pool, channel, p_channel ) do
-      pool_channel = Map.put(pool_channel, :channel, channel)
-
       conn
       |> render("show.json", %{pool_channel: pool_channel})
     end
