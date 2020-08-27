@@ -53,7 +53,7 @@ config :pool_watch, :notification_settings, %{
     %{
       "name" => "Discord",
       "info" => %{
-        "web_hool_url" => "xyz.com"
+        "web_hook_url" => "xyz.com"
       }
     }
   ]

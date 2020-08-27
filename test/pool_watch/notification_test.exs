@@ -33,7 +33,7 @@ defmodule PoolWatch.NotificationTest do
       assert {:ok, u_d_channel} = Channel.create_pool_channel(u_pools, c_discord, @discord)
       assert {:ok, u_t_channel} = Channel.create_pool_channel(u_pools, c_twitter, @twitter)
 
-      assert [d_info, t_info] = Notification.fetch_infos(get_pool(), :stake_pool)
+      assert [d_info, t_info] = Notification.fetch_infos(get_pool(), :pool)
       assert d_info["info"] == u_d_channel.info
       assert t_info["info"] == u_t_channel.info
     end

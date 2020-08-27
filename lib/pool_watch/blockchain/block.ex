@@ -21,7 +21,7 @@ defmodule PoolWatch.Blockchain.Blocks do
     :slot_leader
   ]
 
-  def get_payload("DISCORD", %{"web_hool_url" => url}, %Blocks{} = b_info, %PoolInfo{} = p_info) do
+  def get_payload("DISCORD", %{"web_hook_url" => url}, %Blocks{} = b_info, %PoolInfo{} = p_info) do
     data =
       %{
         "content" => "Congratulations !!! You just recieved New Block :) ",
@@ -68,7 +68,6 @@ defmodule PoolWatch.Blockchain.Blocks do
       [] -> nil
 
       infos ->
-
         infos
         |> Enum.map(&(parse_block(&1, pool_info, block_info)))
         |> Enum.filter(&is_map/1)
