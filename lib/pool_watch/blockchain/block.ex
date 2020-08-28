@@ -48,12 +48,7 @@ defmodule PoolWatch.Blockchain.Blocks do
   end
 
   def get_payload("TWITTER", info, %Blocks{} = b_info, %PoolInfo{ticker: ticker}) do
-    content = """
-      congrats #{ticker}, you have been assigned for block: #{b_info.number}
-      at slot: #{b_info.slot_in_epoch}
-
-      $ADA #cardano #stakepool #pool_watch
-    """
+    content = ~s(#{ticker}  minted new  block: #{b_info.number} at slot: #{b_info.slot_in_epoch} $ADA #cardano #stakepool #pool_watch)
 
     info
     |> Map.put("content", content)

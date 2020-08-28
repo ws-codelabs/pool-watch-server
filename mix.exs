@@ -50,7 +50,8 @@ defmodule PoolWatch.MixProject do
       {:neuron, "~> 5.0"},
       {:bamboo, "~> 1.5"},
       {:guardian, "~> 2.1"},
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+      {:oauther, "~> 1.1"}
     ]
   end
 
