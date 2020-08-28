@@ -75,6 +75,13 @@ defmodule PoolWatch.Blockchain.BlocksTest do
       assert {:ok, resp} = PoolWatch.Notification.Channels.request(twitter)
       assert resp.status_code == 200
     end
+
+    test "discord Notification" do
+      assert [_twitter, discord] = Blocks.handle_block(get_pool(), get_block(), :default)
+      assert {:ok, resp} = PoolWatch.Notification.Channels.request(discord)
+
+      assert resp.status_code == 204
+    end
   end
 
 end
