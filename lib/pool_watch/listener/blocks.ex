@@ -27,9 +27,11 @@ defmodule PoolWatch.Listener.Blocks do
   @impl true
   def handle_info(:check_block, state) do
     new_block = BlocksQuery.get_latest_block()
+    Logger.info("Checking New Block")
+
     monitor_blocks()
     if is_new_block?(new_block, Map.get(state, :block_info)) do
-      # handle new block
+
       spawn(fn -> handle_new_block(new_block) end)
 
       { :noreply,

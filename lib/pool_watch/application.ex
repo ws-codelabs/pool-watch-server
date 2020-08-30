@@ -42,7 +42,9 @@ defmodule PoolWatch.Application do
     else
       [
         # sync all pool info
-        PoolWatch.Pool.PoolSync
+        PoolWatch.Pool.PoolSync,
+        PoolWatch.Listener.ChannelCache,
+        PoolWatch.Listener.Blocks
       ]
     end
   end
