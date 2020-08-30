@@ -76,4 +76,15 @@ defmodule PoolWatch.Blockchain.Blocks do
   end
 
   defp parse_block(_, _, _), do: nil
+
+  def send_request(channels) when is_list(channels) do
+    channels
+    |> Enum.map(&send_request/1)
+  end
+
+  def send_request(channel) when is_map(channel) do
+    PoolWatch.Notification.Channels.request(channel)
+  end
+
+  def send_request(_), do: nil
 end

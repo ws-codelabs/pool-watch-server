@@ -11,12 +11,14 @@ defmodule PoolWatch.Listener.Blocks do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  @default_interval 5000
+  @default_interval 10000
 
   @settings Application.get_env(:pool_watch, :app_settings)
 
   @impl true
   def init(_) do
+    IO.inspect @settings
+
     if Map.get(@settings, "watch_block") do
       monitor_blocks(1000)
     end
@@ -31,6 +33,8 @@ defmodule PoolWatch.Listener.Blocks do
     monitor_blocks()
     if is_new_block?(new_block, Map.get(state, :block_info)) do
       Logger.info("New Block Found")
+      IO.inspect new_block.slot_leader
+
       spawn(fn -> handle_new_block(new_block) end)
 
       { :noreply,
@@ -43,24 +47,31 @@ defmodule PoolWatch.Listener.Blocks do
     end
   end
 
-  defp handle_new_block(%Blocks{slot_leader: %{"stake_pool" => nil}}), do: nil
-  defp handle_new_block(%Blocks{slot_leader: %{"stake_pool" => stake_pool}} = blocks) do
+  defp handle_new_block(%Blocks{slot_leader: %{"stake_pool" => stake_pool}} = blocks)
+    when is_map(stake_pool) do
 
     pool_info =
       Map.get(stake_pool, "metadata_hash")
       |> Pool.get_pool_detail()
 
-    Logger.info(" Found New Block")
+    Logger.info("Found New Block for #{pool_info.ticker}")
 
-    if Map.get(@settings, "send_default_notification") do
+    if Map.get(@settings, "send_default_notification") and String.length(pool_info.ticker) > 0 do
       Logger.info("Sending Notification to Default Channels")
 
       Blocks.handle_block(pool_info, blocks, :default)
+      |> Blocks.send_request()
+
     end
 
     Logger.info("Sending Notification for #{pool_info.ticker}")
+
     Blocks.handle_block(pool_info, blocks, :pool)
+    |> Blocks.send_request()
   end
+
+  defp handle_new_block(_), do: nil
+
 
   defp monitor_blocks(interval \\ @default_interval) do
     Process.send_after(self(), :check_block, interval)
