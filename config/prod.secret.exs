@@ -35,7 +35,9 @@ config :pool_watch, PoolWatchWeb.Endpoint,
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-#     config :pool_watch, PoolWatchWeb.Endpoint, server: true
+
+config :pool_watch, PoolWatchWeb.Endpoint, server: true
+
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.

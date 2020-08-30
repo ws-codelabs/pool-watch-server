@@ -10,7 +10,7 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :pool_watch, PoolWatchWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [host: "pool.watch", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
@@ -54,6 +54,6 @@ config :logger, level: :info
 # and configuration from environment variables.
 config :pool_watch, PoolWatch.Mailer,
   adapter: Bamboo.SendGridAdapter,
-  api_key: {:system, "SENDGRID_API_KEY"}
+  api_key: System.get_env("SENDGRID_API_KEY")
 
 import_config "prod.secret.exs"
