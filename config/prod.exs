@@ -52,4 +52,8 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
+config :pool_watch, PoolWatch.Mailer,
+  adapter: Bamboo.SendGridAdapter,
+  api_key: {:system, "SENDGRID_API_KEY"}
+
 import_config "prod.secret.exs"

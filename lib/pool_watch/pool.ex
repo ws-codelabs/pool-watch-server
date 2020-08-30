@@ -8,6 +8,7 @@ defmodule PoolWatch.Pool do
 
   alias PoolWatch.Pool.PoolInfo
   alias PoolWatch.Account.User
+  alias PoolWatch.Query.StakePoolQuery
 
   @doc """
   Returns the list of pool_infos.
@@ -37,6 +38,30 @@ defmodule PoolWatch.Pool do
 
   """
   def get_info(id), do: Repo.get(PoolInfo, id)
+
+
+  @doc """
+    Fetch bool detail with ticker detail
+
+    ## Examples
+
+        iex> get_pool_detail()
+  """
+  def get_pool_detail(query) do
+    case search_pool(query) do
+      nil ->
+        nil
+
+      %PoolInfo{ticker: ticker} = pool_info when is_binary(ticker)  ->
+        pool_info
+
+      %PoolInfo{} = pool_info ->
+        attrs = StakePoolQuery.fetch_extra_pool_info(pool_info)
+        {:ok, updated_pool} = update_info(pool_info, attrs)
+
+        updated_pool
+    end
+  end
 
 
   @doc """

@@ -59,6 +59,11 @@ config :pool_watch, :notification_settings, %{
   ]
 }
 
+config :pool_watch, :app_settings, %{
+  "watch_block" => System.get_env("WATCH_BLOCK") == "true",
+  "send_default_notification" => System.get_env("SEND_DEFAULT_NOTIFICATION") == "true"
+}
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

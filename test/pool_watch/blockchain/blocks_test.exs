@@ -72,15 +72,15 @@ defmodule PoolWatch.Blockchain.BlocksTest do
 
     test "twitter notification" do
       assert [twitter, _] = Blocks.handle_block(get_pool(), get_block(), :default)
-      assert {:ok, resp} = PoolWatch.Notification.Channels.request(twitter)
-      assert resp.status_code == 200
+      assert %{body: _body, code: code} = PoolWatch.Notification.Channels.request(twitter)
+      assert code == 200
     end
 
     test "discord Notification" do
       assert [_twitter, discord] = Blocks.handle_block(get_pool(), get_block(), :default)
-      assert {:ok, resp} = PoolWatch.Notification.Channels.request(discord)
+      assert %{body: _body, code: code} = PoolWatch.Notification.Channels.request(discord)
 
-      assert resp.status_code == 204
+      assert code == 204
     end
   end
 

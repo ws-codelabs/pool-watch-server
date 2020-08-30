@@ -1,2 +1,3 @@
+<h4> PoolWatch Beta </h4>
 <h5> this is code </h5>
 <%= @data.code %>
