@@ -11,7 +11,5 @@ defmodule PoolWatch.Notification.ChannelsTest do
       |> Map.get("info")
       |> PoolWatch.Utils.struct_from_map(as: %Twitter{})
 
-    IO.inspect response
-
   end
 end
